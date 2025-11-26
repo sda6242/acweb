@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>你的隐藏人格面具 · 心理测试</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<style>
+  body,html{margin:0;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);overflow:hidden}
+  .c{max-width:640px;margin:0 auto;padding:20px;height:100%;display:flex;flex-direction:column;justify-content:center;position:relative}
+  .card{background:rgba(255,255,255,.95);border-radius:24px;padding:40px 30px;box-shadow:0 20px 40px rgba(0,0,0,.1);backdrop-filter:blur(10px);opacity:0;transform:translateY(50px);transition:all 1s cubic-bezier(.22,1,.36,1)}
+  .card.show{opacity:1;transform:none}
+  h1{font-size:28px;text-align:center;margin-bottom:8px;background:linear-gradient(90deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .desc{text-align:center;color:#64748b;margin-bottom:40px;font-size:15px}
+  .q{font-size:20px;line-height:1.6;margin-bottom:40px;min-height:80px;text-align:center}
+  .os{display:flex;flex-direction:column;gap:16px}
+  .o{padding:18px 24px;background:#f8fafc;border:2px solid #e2e8f0;border-radius:16px;cursor:pointer;transition:all .4s;font-size:17px;position:relative}
+  .o:hover{border-color:#6366f1;transform:translateX(8px)}
+  .o.s{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;border-color:transparent;transform:translateX(12px)}
+  .p{height:6px;background:rgba(255,255,255,.3);border-radius:3px;overflow:hidden;margin:40px 0 20px}
+  .pb{width:0;height:100%;background:linear-gradient(90deg,#67e8f7,#a855f7);transition:width .8s cubic-bezier(.65,0,.35,1)}
+  .rt{font-size:32px;margin:20px 0 30px;background:linear-gradient(90deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
+  .r{text-align:center;line-height:1.9;font-size:18px}
+  .s{margin-top:40px;color:#94a3b8;font-size:14px;text-align:center}
+  .pt{position:fixed;pointer-events:none;background:linear-gradient(45deg,#a855f7,#6366f1);border-radius:50%;z-index:-1;animation:f 10s infinite linear}
+  @keyframes f{0%{transform:translateY(100vh) rotate(0)}100%{transform:translateY(-20vh) rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="c">
+  <div class="card show" id="a"><h1>你的隐藏人格面具</h1><p class="desc">10道极简问题，揭开你从未展示的那一面</p><button style="padding:16px 50px;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border:none;border-radius:16px;font-size:18px;cursor:pointer" onclick="s()">开始测试</button></div>
+  
+  <div class="card" id="b" style="display:none">
+    <div class="p"><div class="pb" id="pg"></div></div>
+    <div class="q" id="q"></div>
+    <div class="os" id="os"></div>
+  </div>
+  
+  <div class="card" id="c" style="display:none">
+    <h1>你的隐藏人格面具是</h1>
+    <div class="rt" id="t"></div>
+    <div class="r" id="d"></div>
+    <p class="s">分享给朋友一起测 →</p>
+  </div>
+</div>
+
+<script>
+const qs=[
+  ["周末最想做什么？","一个人宅家追剧/打游戏","和三五好友小聚","去人挤人的热闹地方","出门旅行/探险"],
+  ["突然下大雨，你没带伞，你会？","立刻找地方躲雨","冒雨狂奔回家","找人借伞或买一把","反正已经湿了慢慢走"],
+  ["面对冲突你更倾向？","直接说开","先忍着","用幽默化解","视情况"],
+  ["更喜欢哪种表达爱的方式？","语言直白说“我爱你”","送礼物/做实事","身体接触","陪伴"],
+  ["做决定时你更相信？","感觉与直觉","数据与逻辑","问家人朋友","列利弊"],
+  ["深夜最常想的事是？","明天要早起好烦","人生意义是什么","突然想起一件尴尬往事","干脆熬夜"],
+  ["被误解时你会？","立刻解释","无所谓","事后越想越气","用行动证明"],
+  ["更享受？","被需要的感觉","独处充电","被夸","掌控一切"],
+  ["看到别人哭你会？","手足无措","默默递纸巾","安慰TA","讲笑话转移注意力"],
+  ["对未来的态度是？","随缘就好","必须按我的计划来","害怕但期待","躺平"]
+];
+
+const res={
+  "温柔治愈者":{t:"温柔治愈者",d:"你像一团棉花糖，外表软糯，内心更有超强治愈力。<br>别人在你身边会莫名安心。你是朋友圈的「人间暖宝宝」。<br><br><b>隐藏面具：</b>偶尔也想发疯，但怕吓到别人就自己压下去了。"},
+  "隐形掌控者":{t:"隐形掌控者",d:"表面佛系，实则一切尽在掌控。你讨厌失控，所以提前把所有可能性都安排好。<br><br><b>隐藏面具：</b>别人以为你随和，其实你只是懒得解释。"},
+  "情绪艺术家":{t:"情绪艺术家",d:"你的情绪像打翻的调色盘，五彩斑斓。你哭得撕心裂肺，也笑得肆意张扬。<br><br><b>隐藏面具：</b>其实你比谁都在意别人对你的评价，只是表现得不在乎。"},
+  "隐藏社牛":{t:"隐藏社牛",d:"表面社恐，骨子里社牛。一旦熟悉后能把天聊到宇宙尽头。<br><br><b>隐藏面具：</b>真正害怕的是「不被喜欢」，所以陌生环境自动高冷自保。"},
+  "理性机器":{t:"理性机器",d:"你永远冷静，像台精密仪器。别人崩溃时你能立刻给出最优解。<br><br><b>隐藏面具：</b>其实你也有想发疯的时候，只是理性永远压倒一切。"},
+  "人间烟火":{t:"人间烟火",d:"你是人间的烟火，平凡又惊艳。你享受所有小确幸，把日子过成诗。<br><br><b>隐藏面具：</b>偶尔也想摆烂，但责任感太强放不下来。"},
+  "暗黑破坏神":{t:"暗黑破坏神",d:"你内心住着一个暗黑小恶魔，表面乖巧，实则满脑子不被允许的想法。<br><br><b>隐藏面具：</b>你比谁都怕被发现真实想法，所以外表永远无害。"},
+  "永远的受害者":{t:"永远的受害者",d:"你习惯站在道德制高点，用“我太难了”博取同情。<br><br><b>隐藏面具：</b>其实你比谁都精明，只是享受被照顾的感觉。"}
+};
+
+const map=[
+  ["温柔治愈者","隐藏社牛","情绪艺术家","隐形掌控者"],
+  ["理性机器","情绪艺术家","隐形掌控者","人间烟火"],
+  ["情绪艺术家","温柔治愈者","隐藏社牛","隐形掌控者"],
+  ["情绪艺术家","隐形掌控者","隐藏社牛","温柔治愈者"],
+  ["情绪艺术家","理性机器","永远的受害者","隐形掌控者"],
+  ["人间烟火","情绪艺术家","永远的受害者","暗黑破坏神"],
+  ["理性机器","人间烟火","情绪艺术家","隐形掌控者"],
+  ["温柔治愈者","隐藏社牛","情绪艺术家","隐形掌控者"],
+  ["理性机器","温柔治愈者","情绪艺术家","隐藏社牛"],
+  ["人间烟火","隐形掌控者","情绪艺术家","永远的受害者"]
+];
+
+let cur=0, ans=[], timer;
+
+function s(){
+  document.getElementById("a").classList.remove("show");
+  setTimeout(()=>{document.getElementById("a").style.display="none";document.getElementById("b").style.display="block";
+    setTimeout(()=>{document.getElementById("b").classList.add("show");showQ();},50);
+  },600);
+}
+
+function showQ(){
+  if(cur>=qs.length){showRes();return;}
+  const q=qs[cur];
+  document.getElementById("q").innerHTML=`<strong>${cur+1}/10</strong><br>${q[0]}`;
+  const os=document.getElementById("os"); os.innerHTML="";
+  for(let i=1;i<=4;i++){
+    const d=document.createElement("div");
+    d.className="o";
+    d.innerText=q[i];
+    d.onclick=()=>choose(i-1);
+    os.appendChild(d);
+  }
+  document.getElementById("pg").style.width=(cur/qs.length)*100+"%";
+}
+
+function choose(n){
+  if(ans[cur]!==undefined) return; // 防止重复点击
+  ans[cur]=n;
+  document.querySelectorAll(".o").forEach((el,i)=>el.classList.toggle("s",i===n));
+  // 自动跳转
+  clearTimeout(timer);
+  timer=setTimeout(()=>{
+    cur++;
+    showQ();
+  }, 700); // 700ms 延迟，节奏最舒服
+}
+
+function showRes(){
+  const scores={};
+  for(const k in res) scores[k]=0;
+  ans.forEach((a,i)=>scores[map[i][a]]++);
+  let max=0, result="温柔治愈者";
+  for(const k in scores){
+    if(scores[k]>max){max=scores[k];result=k;}
+    else if(scores[k]===max && Math.random()<0.5) result=k; // 随机打平
+  }
+  document.getElementById("t").innerHTML=res[result].t;
+  document.getElementById("d").innerHTML=res[result].d;
+
+  document.getElementById("b").classList.remove("show");
+  setTimeout(()=>{
+    document.getElementById("b").style.display="none";
+    document.getElementById("c").style.display="block";
+    setTimeout(()=>{document.getElementById("c").classList.add("show");createP();},50);
+  },600);
+}
+
+function createP(){
+  for(let i=0;i<40;i++){
+    const p=document.createElement("div");
+    p.className="pt";
+    const sz=Math.random()*10+5;
+    p.style.width=p.style.height=sz+"px";
+    p.style.left=Math.random()*100+"vw";
+    p.style.animationDuration=(Math.random()*6+6)+"s";
+    p.style.opacity=Math.random()*0.6+0.2;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),15000);
+  }
+}
+</script>
+</body>
+</html>
